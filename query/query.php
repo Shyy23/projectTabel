@@ -24,5 +24,4 @@ $sql_guruu = selectQuery($conn, 'guru', 'id_guru');
 $sql_hari = selectQuery($conn, 'hari', 'id_hari');
 $sql_absenn = selectQuery($conn, 'absen', 'id_absen');
 
-
 ?>
