@@ -1,0 +1,78 @@
+/* ================= MAIN GALERY ======================= */
+.content{
+    width: 100%;
+    height: auto;
+    padding-top: 2rem;
+}
+
+.title{
+    position: relative;
+    top: -5rem;
+}
+.title2{
+    position: relative;
+    top: 5rem;
+}
+.slider{
+    position: relative;
+    width: 13.5rem;
+    height: 13.5rem;
+    transform-style: preserve-3d;
+    animation: rotate 30s linear infinite;
+    margin-bottom: 2rem;
+}
+
+.slider2{
+    position: relative;
+    width: 13.5rem;
+    height: 13.5rem;
+    transform-style: preserve-3d;
+    animation: rotate 30s linear infinite;
+    margin-top: 10rem;
+}
+
+.slider span{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    transform-style: preserve-3d;
+    transform: rotateY(calc(var(--i)*45deg)) translateZ(350px);
+}
+.slider2 span{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    transform-style: preserve-3d;
+    transform: rotateY(calc(var(--i)*45deg)) translateZ(350px);
+}
+@keyframes rotate {
+    0%{
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    100%{
+        transform: perspective(1000px) rotateY(360deg);
+    }
+}
+.img__slider{
+    aspect-ratio: 4/4;
+    width: 25rem;
+    position: absolute;border-radius: 1rem;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 2rem;
+    object-fit: cover;
+    transition: 2s;
+    border: 2px solid var(--black-color);
+}
+.galery{
+    padding-left: 20rem;
+    padding-block: 5rem;
+    
+}

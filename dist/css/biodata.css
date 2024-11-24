@@ -1,0 +1,37 @@
+/* ================= MAIN BIO ======================= */
+.card{
+    background-color: hsla(0, 0%, 0%, .2);
+    backdrop-filter: blur(16px);
+    box-shadow: 2px 0 24px var(--shadow-color);
+    padding: 2rem;
+    border-radius: .5rem;
+
+}
+
+.card__content{
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: space-between;
+    margin-inline: 3rem;
+}
+
+.bio__name{
+    font-size: var(--h3-font-size);
+    color: var(--title-color);
+}
+
+.bio__description{
+    font-size: var(--normal-font-size);
+    color: var(--bw-color);
+}
+.title{
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+
+.img{
+    border-radius: .5rem;
+    width: 15rem;
+
+}

@@ -1,0 +1,9 @@
+/* ================= VIDEO ======================= */
+.video{
+    border-radius: 1rem;
+    margin-inline: 1rem;
+}
+/* ================= AUDIO ======================= */
+.audio{
+    margin-top: 1rem;
+}

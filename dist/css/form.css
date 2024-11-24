@@ -1,0 +1,292 @@
+/* ================= MAIN FORM ======================= */
+/* ================= BREAKPOINTS ======================= */
+
+:root{
+    --btn-shadow: rgba(0,0,0,.5);
+    --btn-light: rgba(255, 255, 255, .5);
+
+}
+
+*{
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 10rem;
+}
+
+
+.form_container{
+    background-color: var(--container-color);
+    box-shadow: 2px 2px 8px 2px var(--btn-shadow);
+    width: 35rem;
+    height: 35rem;
+    padding-block: 1.5rem;
+    border-radius: 1rem;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    grid-template-rows: 7rem 7rem;
+}
+
+.edit__form{
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0, 12rem));
+    place-items: center;
+    column-gap: 2rem;
+    position: relative;
+}
+
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+.edit__form::after, .edit__form::before{
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-image: conic-gradient(from var(--angle), transparent 80%,var(--container-color), var(--first-color));
+    z-index: -1;
+    padding: 3px;
+    border-radius: 1rem;
+    animation: 3s spin linear infinite;
+}
+
+
+@keyframes spin {
+    0% {
+       --angle: 0deg;
+    }
+    100% {
+        --angle: 360deg;
+    }
+}
+.edit__form::before{
+    filter: blur(1.5rem);
+    opacity: .5;
+}
+.btn__edit{
+    grid-column: span 2;
+    padding: 1rem 2rem;
+    border-radius: .5rem;
+    box-shadow: 3px 3px 3px var(--btn-shadow),
+    -3px -3px 3px var(--btn-light);
+    transition: all .4s cubic-bezier(.2 , 0 .4, 1);
+    width: 20rem;
+}
+.btn__edit:hover{
+    box-shadow: 3px 3px 3px var(--btn-shadow) inset,
+    -3px -3px 2px var(--btn-light) inset;
+}
+.wrapper{
+    font-size: 1.25rem;
+    position: relative;
+}
+
+.input{
+    all: unset;
+    color: #fefefe;
+    padding: 1rem;
+    border: 1px solid #9e9e9e;
+    border-radius: 10px;
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.2rem;
+}
+
+.select{
+    color: #fefefe;
+    padding: 1rem;
+    border: 1px solid #9e9e9e;
+    border-radius: 10px;
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: transparent;
+    font-size: 1.2rem;
+}
+.option{
+    background-color: var(--body-color);
+    font-size: 1rem;
+}
+
+.info{
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    pointer-events: none;
+    color: #d4d4d4;
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input:focus{
+    border: 1px solid var(--first-color);
+}
+
+.input:is(:focus, :valid) ~ label {
+    transform: translateY(-120%) scale(0.7);
+    background-color: var(--container-color);
+    padding-inline: .3rem;
+    color: var(--first-color);
+}
+.wrapper__select{
+    display: flex;
+    flex-direction: column;
+    row-gap: .5rem;
+}
+
+.btn{
+    text-align: center;
+    background-color: var(--first-color);
+    font-weight: var(--font-semi-bold);
+    cursor: pointer;
+}
+
+.info-select, .info-read{
+    position: absolute;
+    top: 1rem;
+    left: .1rem;
+    pointer-events: none;
+    color: #d4d4d4;
+    transition: cubic-bezier(0.4, 0 , 0.2, 1);
+    white-space: nowrap;
+}
+
+.input-jam ~ .info-jam,
+.read ~ .info-read {
+    position: absolute;
+    
+    left: 0.5rem;
+    pointer-events: none;
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-jam ~ .info-jam.stacked,
+.input-jam:is(:focus, :valid) ~ .info-jam ,
+.read ~ .info-read.stacked,
+.read:is(:focus, :valid) ~ .info-read {
+    transform: translateY(-120%) scale(0.7);
+    background-color: var(--container-color);
+    padding-inline: 0.3rem;
+    color: var(--first-color);
+}
+.input-jam ~ .info-jam.stacked,
+.input-jam:is(:focus, :valid) ~ .info-jam {
+    transform: translateY(-120%) scale(0.7);
+    background-color: var(--container-color);
+    padding-inline: 0.3rem;
+    color: var(--first-color);
+}
+
+.select:is(:focus, :valid) ~ .info-select, .info-select.stacked{
+    transform: translateY(-120%) scale(.7);
+    background-color: var(--container-color);
+    padding-inline: .3rem;
+    color: var(--first-color);
+}
+
+.info-jam{
+    white-space: nowrap;
+}
+.content_jam , .content__ginput{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper__jam, .wrapper__ginput{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.wrapper__jam{
+    justify-content: space-between;
+}
+.wrapper__ginput{
+    gap: 3rem;
+}
+.center{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.acenter{
+    align-self: center;
+    justify-self: center;
+}
+
+.content__ginput{
+    width: 10rem;
+}
+.content__ginput .input,
+.content__ginput .select{
+    width: min(100%, 10rem);
+}
+
+/* ADD CSS */
+
+.form__add{
+    width: min(95vw, 80rem);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem;
+    place-items: center;
+}
+
+.form__add::after, .form__add::before{
+    content: '';
+    position: absolute;
+    height: 90%;
+    width: min(95vw, 80rem);
+    background-image: conic-gradient(from var(--angle), var(--container-color), var(--first-color));
+    z-index: -1;
+    padding: 3px;
+    border-radius: 1rem;
+    animation: 3s spin linear infinite;
+}
+
+
+.add{
+    width: 15rem;
+}
+.add__select{
+    width: 17rem;
+}
+.btn__add{
+    width: 13rem;
+    padding: 1rem 1.5rem;
+    border-radius: 2rem;
+    box-shadow: 2px 2px 8px transparent
+    inset 2px 2px 8px white;
+}
+
+.btn__add:hover{
+    box-shadow: inset 1px 1px 4px var(--white-color),
+                2px 2px 4px var(--first-color) ;
+
+}
+.input-add{
+    width: calc(17rem - 2rem);
+}
+
+
+
+.input-edit, .select-edit{
+    width: min(100%, 10rem);
+    cursor: pointer;
+}
+
+.wrapper-add{
+    width: min(100%, 10rem);
+    display: flex;
+}
