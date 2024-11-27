@@ -2,6 +2,7 @@
 session_start();
 include "../koneksi/koneksi.php";
 include "../query/query.php";
+include "../query/query_search.php";
 
 if (isset($_SESSION['message'])) {
     echo "
@@ -65,9 +66,10 @@ if (isset($_SESSION['message'])) {
         
                 </div>
         
-                <form action="" class="header__search">
+                <form action="" method="POST" class="header__search" id="header-search">
+                    <input type="hidden" name="tabel" id="table-search-type" value="siswa">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" placeholder="search" class="header__input">
+                    <input type="search" name="search" placeholder="search" class="header__input" id="search" autocomplete="false" >
                 </form>
             </header>
             <!-- ================= SIDEBAR ===================== -->
@@ -162,12 +164,17 @@ if (isset($_SESSION['message'])) {
                         <h1 class="title__table">Tabel Daftar Siswa</h1>
                         </div>
                         <div class="table__fungsi">
+                            <div class="pagination">
+                                <a data-fungsi="prev" id="prev-page" href="" class="prev__page"><i class="fa-solid fa-angle-left"></i></a>
+                                <div class="page__numbers">   </div>
+                                <a data-fungsi="next" id="next-page" href="" class="next__page"><i class="fa-solid fa-angle-right"></i></a>
+                            </div>
                             <a  data-fungsi="add" href="../view/viewAdd.php?tabel=siswa" class="add-btn"><i class="fa-solid fa-plus"></i></a>
                             <a  data-fungsi="print" href=""><i class="fa-solid fa-file-pdf"></i></a>
                         </div>
                     </section>
                     <section class="table__body">
-                        <table class="table__container">
+                        <table class="table__container" id="table-siswa">
                         <thead class="table__head">
                                     <tr class="table__row">
                                         <th class="table__col">No</th>
@@ -179,19 +186,19 @@ if (isset($_SESSION['message'])) {
                                         <th class="table__col">Delete</th>
                                     </tr>
                                 </thead>
-                                <tbody class="table__body_1">
+                                <tbody class="table__body_1" id="table-body-siswa">
                                         <?php
-                                        if($sql_siswa->num_rows > 0){
+                                        if($result_siswa->num_rows > 0){
                                             $no = 1;
         
-                                            while($row = $sql_siswa->fetch_assoc()){
+                                            while($row = $result_siswa->fetch_assoc()){
                                                 echo "<tr class='table__row'>";
-                                                echo "<td class='table__data'>" . $no++ . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['jenis_kelamin'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_kelas_s'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['alamat'] . "</td>";
-                                                echo "<td class='table__data'>";
+                                                echo "<td class='table__data '>" . $no++ . "</td>";
+                                                echo "<td class='table__data '>" . $row['nama'] . "</td>";
+                                                echo "<td class='table__data '>" . $row['jenis_kelamin'] . "</td>";
+                                                echo "<td class='table__data '>" . $row['nama_kelas_s'] . "</td>";
+                                                echo "<td class='table__data '>" . $row['alamat'] . "</td>";
+                                                echo "<td class='table__data '>";
                                                 echo "<a class='edit__btn btn' href='../view/viewEdit.php?tabel=siswa&siswa_id=". $row['id_siswa'] ."'>EDIT</a>";
                                                 echo "</td>";
                                                 echo "<td class='table__data'>";

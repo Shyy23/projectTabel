@@ -297,6 +297,37 @@ tbody tr:hover{
     color: black;
 }
 
+.header__input:-webkit-autofill {
+    background-color: hsla(0, 0%, 100%, .16) !important; /* Warna latar belakang khusus untuk autofill */
+    color: var(--bw-color); /* Warna teks */
+    transition: background-color 0.5s ease; /* Animasi perubahan warna */
+}
+
+
+/* ================== LOADER ======================== */
+.skeleton {
+    background: linear-gradient(90deg, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+    background-size: 40px 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 1.5s infinite linear;
+    height: 20px; /* Pastikan ada tinggi untuk skeleton */
+    border-radius: 4px; /* Opsional */
+    background-position: left -40px top 0;
+}
+
+
+@keyframes shimmer {
+    to {
+        background-position: right -40px top 0;
+    }
+}
+
+/* ================== PAGINATION ======================== */
+.pagination{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 /* ================== BREAKPOINTS ======================== */
 @media screen and (max-width:1500px) {

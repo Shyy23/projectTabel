@@ -1,7 +1,6 @@
 <?php
 include '../koneksi/koneksi.php';
-function selectQuery($conn, $tabel, $col){
-    $sql = "SELECT * FROM $tabel ORDER BY $col";
+function selectQuery($conn, $sql){
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -10,18 +9,16 @@ function selectQuery($conn, $tabel, $col){
 // Query untuk data tabel siswa
 
 // Main Query View
-$sql_siswa = selectQuery($conn, 'vSiswa', 'id_siswa');
-$sql_guru = selectQuery($conn, 'vGuru', 'id_guru');
-$sql_jadwal = selectQuery($conn,'vJadwal', 'id_hari');
-$sql_absen = selectQuery($conn, 'vAbsen', 'id_absen');
+$sql_siswa = "SELECT * FROM vSiswa ORDER BY id_siswa" ;
+$result_siswa = selectQuery($conn, $sql_siswa);
 
-// Additional Query
-$sql_kelass = selectQuery($conn, 'vKelas', 'id_kelas');
-$sql_kelas = selectQuery($conn, 'kelas', 'id_kelas');
-$sql_siswaa = selectQuery($conn, 'siswa', 'id_siswa');
-$sql_mapel = selectQuery($conn, 'mapel', 'id_mapel');
-$sql_guruu = selectQuery($conn, 'guru', 'id_guru');
-$sql_hari = selectQuery($conn, 'hari', 'id_hari');
-$sql_absenn = selectQuery($conn, 'absen', 'id_absen');
+$sql_guru = "SELECT * FROM vGuru ORDER BY id_guru";
+$result_guru = selectQuery($conn, $sql_guru);
+
+$sql_jadwal = "SELECT * FROM vJadwal ORDER BY id_hari";
+$result_jadwal = selectQuery($conn,$sql_jadwal);
+
+$sql_absen = "SELECT * FROM vAbsen ORDER BY id_absen";
+$result_absen = selectQuery($conn, $sql_absen);
 
 ?>

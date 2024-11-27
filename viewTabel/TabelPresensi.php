@@ -2,6 +2,7 @@
 session_start();
 include "../koneksi/koneksi.php";
 include "../query/query.php";
+include "../query/query_search.php";
 
 if (isset($_SESSION['message'])) {
     echo "
@@ -65,9 +66,10 @@ if (isset($_SESSION['message'])) {
         
                 </div>
         
-                <form action="" class="header__search">
+                <form action="" method="POST" class="header__search" id="header-search">
+                <input type="hidden" name="tabel" id="table-search-type" value="absen">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" placeholder="search" class="header__input">
+                    <input type="search" name="search" placeholder="search" class="header__input" id="search" autocomplete="false" >
                 </form>
             </header>
             <!-- ================= SIDEBAR ===================== -->
@@ -167,7 +169,7 @@ if (isset($_SESSION['message'])) {
                         </div>
                     </section>
                     <section class="table__body">
-                        <table class="table__container">
+                        <table class="table__container" id="table-absen">
                         <thead class="table__head">
                                     <tr class="table__row">
                                         <th class="table__col">No</th>
@@ -180,12 +182,12 @@ if (isset($_SESSION['message'])) {
                                         <th class="table__col">Delete</th>
                                     </tr>
                                 </thead>
-                                <tbody class="table__body_1">
+                                <tbody class="table__body_1" id="table-body-absen">
                                         <?php
-                                        if($sql_absen->num_rows > 0){
+                                        if($result_absen->num_rows > 0){
                                             $no = 1;
         
-                                            while($row = $sql_absen->fetch_assoc()){
+                                            while($row = $result_absen->fetch_assoc()){
                                                 echo "<tr class='table__row'>";
                                                 echo "<td class='table__data'>" . $no++ . "</td>";
                                                 echo "<td class='table__data'>" . $row['nama_siswa_a'] . "</td>";
