@@ -1,8 +1,7 @@
 <?php
 session_start();
 include "../koneksi/koneksi.php";
-include "../query/query.php";
-include "../query/query_search.php";
+
 
 if (isset($_SESSION['message'])) {
     echo "
@@ -164,6 +163,11 @@ if (isset($_SESSION['message'])) {
                         <h1 class="title__table">Tabel Daftar Guru</h1>
                         </div>
                         <div class="table__fungsi">
+                            <div class="pagination" id="pagination">
+                                <a data-fungsi="prev" id="prev-page" href="" class="prev__page"><i class="fa-solid fa-angle-left"></i></a>
+                                <div class="page__numbers" id="page-numbers">   </div>
+                                <a data-fungsi="next" id="next-page" href="" class="next__page"><i class="fa-solid fa-angle-right"></i></a>
+                            </div>
                             <a  data-fungsi="add" href="../view/viewAdd.php?tabel=guru" class="add-btn"><i class="fa-solid fa-plus"></i></a>
                             <a  data-fungsi="print" href=""><i class="fa-solid fa-file-pdf"></i></a>
                         </div>
@@ -173,40 +177,17 @@ if (isset($_SESSION['message'])) {
                         <thead class="table__head">
                                     <tr class="table__row">
                                         <th class="table__col">No</th>
-                                        <th class="table__col">Nama</th>
-                                        <th class="table__col">Jenis Kelamin</th>
-                                        <th class="table__col">Mapel</th>
-                                        <th class="table__col">Alamat</th>
+                                        <th class="table__col" data-sort="nama_guru_g">Nama <i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="jenis_kelamin">Jenis Kelamin <i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="nama_mapel_g">Mapel <i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="alamat_guru_g">Alamat <i class="sort-icon"></i></th>
                                         <th class="table__col">Edit</th>
                                         <th class="table__col">Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table__body_1" id="table-body-guru">
-                                        <?php
-                                        if($result_guru->num_rows > 0){
-                                            $no = 1;
-        
-                                            while($row = $result_guru->fetch_assoc()){
-                                                echo "<tr class='table__row'>";
-                                                echo "<td class='table__data'>" . $no++ . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_guru_g'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['jenis_kelamin'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_mapel_g'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['alamat_guru_g'] . "</td>";
-                                                echo "<td class='table__data'>";
-                                                echo "<a class='edit__btn btn' href='../view/viewEdit.php?tabel=guru&guru_id=". $row['id_guru'] ."'>EDIT</a>";
-                                                echo "</td>";
-                                                echo "<td class='table__data'>";
-                                                echo "<a class='delete__btn btn' href='../query/query_delete.php?tabel=guru&id=". $row['id_guru'] ."'>DELETE</a>";                                       
-                                                echo "</td>";
-                                                echo '</tr>';
-                                            }
-                                        } else {
-                                            echo "<tr><td class='colspan-5'>Belum ada Catatan</td></tr>";
-                                        }
-                                        
-                                        ?>
-                                    </tbody>
+                                    
+                                </tbody>
                         </table>
                     </section>
                 </div>

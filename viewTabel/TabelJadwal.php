@@ -1,8 +1,7 @@
 <?php
 session_start();
 include "../koneksi/koneksi.php";
-include "../query/query.php";
-include "../query/query_search.php";
+
 
 if (isset($_SESSION['message'])) {
     echo "
@@ -164,6 +163,11 @@ if (isset($_SESSION['message'])) {
                         <h1 class="title__table">Tabel Daftar Jadwal</h1>
                         </div>
                         <div class="table__fungsi">
+                            <div class="pagination" id="pagination">
+                                <a href="#" data-fungsi="prev" class="prev__page" id="prev-page"><i class="fa-solid fa-angle-left"></i></a>
+                                <div class="page__numbers" id="page-numbers"></div>
+                                <a href="#" data-fungsi="next" class="next__page" id="next-page"><i class="fa-solid fa-angle-right"></i></a>
+                            </div>
                             <a  data-fungsi="add" href="../view/viewAdd.php?tabel=jadwal" class="add-btn"><i class="fa-solid fa-plus"></i></a>
                             <a  data-fungsi="print" href=""><i class="fa-solid fa-file-pdf"></i></a>
                         </div>
@@ -173,44 +177,19 @@ if (isset($_SESSION['message'])) {
                         <thead class="table__head">
                                     <tr class="table__row">
                                         <th class="table__col">No</th>
-                                        <th class="table__col">Hari</th>
-                                        <th class="table__col">Nama Guru</th>
-                                        <th class="table__col">Kelas</th>
-                                        <th class="table__col">Mapel</th>
-                                        <th class="table__col">Jam Mulai</th>
-                                        <th class="table__col">Jam Selesai</th>
+                                        <th class="table__col" data-sort="nama_hari_j">Hari<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="nama_guru_j">Nama Guru<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="nama_kelas_j">Kelas<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="nama_mapel_j">Mapel<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="jam_mulai">Jam Mulai<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="jam_selesai">Jam Selesai<i class="sort-icon"></i></th>
                                         <th class="table__col">Edit</th>
                                         <th class="table__col">Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table__body_1" id="table-body-jadwal">
-                                        <?php
-                                        if($result_jadwal->num_rows > 0){
-                                            $no = 1;
-        
-                                            while($row = $result_jadwal->fetch_assoc()){
-                                                echo "<tr class='table__row'>";
-                                                echo "<td class='table__data'>" . $no++ . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_hari_j'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_guru_j'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_kelas_j'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_mapel_j'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['jam_mulai'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['jam_selesai'] . "</td>";
-                                                echo "<td class='table__data'>";
-                                                echo "<a class='edit__btn btn' href='../view/viewEdit.php?tabel=jadwal&jadwal_id=". $row['id_jadwal'] ."'>EDIT</a>";
-                                                echo "</td>";
-                                                echo "<td class='table__data'>";
-                                                echo "<a class='delete__btn btn' href='../query/query_delete.php?tabel=jadwal&id=". $row['id_jadwal'] ."'>DELETE</a>";                                       
-                                                echo "</td>";
-                                                echo '</tr>';
-                                            }
-                                        } else {
-                                            echo "<tr><td class='colspan-5'>Belum ada Catatan</td></tr>";
-                                        }
                                         
-                                        ?>
-                                    </tbody>
+                                </tbody>
                         </table>
                     </section>
                 </div>

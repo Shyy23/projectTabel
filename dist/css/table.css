@@ -189,7 +189,7 @@ tbody tr:hover{
 }
 
 .table__fungsi a i{
-    height: 1rem;
+    height: .8rem;
     color: white;
 }
 
@@ -327,8 +327,52 @@ tbody tr:hover{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: .8rem;
 }
 
+.page__numbers{
+    display: flex;
+    flex-direction: row;
+    gap: .8rem;
+    align-items: center;
+
+}
+
+.page__number{
+    color: var(--title-color);
+    place-items: center;
+    padding: initial;
+}
+
+.next__page.disabled,
+.prev__page.disabled{
+    pointer-events: none;
+    opacity: .5;
+}
+
+.page__number.active{
+    pointer-events: none;
+    color: var(--first-color);
+    transform: scale(1.2);
+}
+
+.table__col[data-sort]{
+    cursor: pointer;
+}
+
+
+
+
+
+.sort-icon {
+    margin-left: .5rem;
+    font-size: .8rem;
+    visibility: hidden; /* Secara default, sembunyikan ikon */
+}
+
+th.sorting .sort-icon {
+    visibility: visible; /* Menampilkan ikon saat kolom disortir */
+}
 /* ================== BREAKPOINTS ======================== */
 @media screen and (max-width:1500px) {
     td:not(:first-of-type){

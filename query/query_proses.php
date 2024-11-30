@@ -83,7 +83,7 @@ switch($tabel){
             $stmt->bind_param("iiiiss", $id_hari, $id_guru, $id_kelas, $id_mapel, $jam_mulai, $jam_selesai);
             if($stmt->execute()){
                    $_SESSION['message'] = "Data berhasil ditambahkan.";
-                header("Location:../table.php");
+                header("Location:../viewTabel/TabelJadwal.php");
                 exit;
             }else{
                 $_SESSION['message'] = "Gagal menambahkan data.";

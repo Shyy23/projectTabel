@@ -1,8 +1,7 @@
 <?php
 session_start();
 include "../koneksi/koneksi.php";
-include "../query/query.php";
-include "../query/query_search.php";
+
 
 if (isset($_SESSION['message'])) {
     echo "
@@ -164,6 +163,11 @@ if (isset($_SESSION['message'])) {
                         <h1 class="title__table">Tabel Daftar Presensi</h1>
                         </div>
                         <div class="table__fungsi">
+                            <div class="pagination" id="pagination">
+                                <a data-fungsi="prev" id="prev-page" href="" class="prev__page"><i class="fa-solid fa-angle-left"></i></a>
+                                <div class="page__numbers" id="page-numbers">   </div>
+                                <a data-fungsi="next" id="next-page" href="" class="next__page"><i class="fa-solid fa-angle-right"></i></a>
+                            </div>
                             <a  data-fungsi="add" href="../view/viewAdd.php?tabel=presensi" class="add-btn"><i class="fa-solid fa-plus"></i></a>
                             <a  data-fungsi="print" href=""><i class="fa-solid fa-file-pdf"></i></a>
                         </div>
@@ -173,42 +177,18 @@ if (isset($_SESSION['message'])) {
                         <thead class="table__head">
                                     <tr class="table__row">
                                         <th class="table__col">No</th>
-                                        <th class="table__col">Nama Siswa</th>
-                                        <th class="table__col">Nama Mapel</th>
-                                        <th class="table__col">Waktu</th>
-                                        <th class="table__col">Tanggal</th>
-                                        <th class="table__col">Keterangan</th>
-                                        <th class="table__col">Edit</th>
-                                        <th class="table__col">Delete</th>
+                                        <th class="table__col" data-sort="nama_siswa_a">Nama Siswa<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="nama_mapel_a">Mapel<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="waktu">Waktu<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="tanggal">Tanggal<i class="sort-icon"></i></th>
+                                        <th class="table__col" data-sort="keterangan_a">Keterangan<i class="sort-icon"></i></th>
+                                        <th class="table__col" >Edit</th>
+                                        <th class="table__col" >Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table__body_1" id="table-body-absen">
-                                        <?php
-                                        if($result_absen->num_rows > 0){
-                                            $no = 1;
-        
-                                            while($row = $result_absen->fetch_assoc()){
-                                                echo "<tr class='table__row'>";
-                                                echo "<td class='table__data'>" . $no++ . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_siswa_a'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['nama_mapel_a'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['waktu'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['tanggal'] . "</td>";
-                                                echo "<td class='table__data'>" . $row['keterangan_a'] . "</td>";
-                                                echo "<td class='table__data'>";
-                                                echo "<a class='edit__btn btn' href='../view/viewEdit.php?tabel=presensi&presensi_id=". $row['id_absen'] ."'>EDIT</a>";
-                                                echo "</td>";
-                                                echo "<td class='table__data'>";
-                                                echo "<a class='delete__btn btn' href='../query/query_delete.php?tabel=presensi&id=". $row['id_absen'] ."'>DELETE</a>";                                       
-                                                echo "</td>";
-                                                echo '</tr>';
-                                            }
-                                        } else {
-                                            echo "<tr><td class='colspan-5'>Belum ada Catatan</td></tr>";
-                                        }
                                         
-                                        ?>
-                                    </tbody>
+                                </tbody>
                         </table>
                     </section>
                 </div>
