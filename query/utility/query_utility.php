@@ -1,6 +1,11 @@
 <?php
     include '../../koneksi/koneksi.php';
     include 'function_utility.php';
+    session_start();
+    $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'user'; // Role default 'user' jika tidak ditemukan
+    $id_kelas = $_SESSION['id_kelas'] ?? ''; // Misalnya id_kelas disimpan dalam session
+    $nama_kelas = $_SESSION['kelas'];
+    $nama_user = $_SESSION['nama'] ?? '';
 
     // Validasi tabel yang diizinkan
     $allowedTables = ['siswa', 'guru', 'jadwal', 'absen'];
@@ -31,33 +36,59 @@
     // Pilih kolom yang sesuai berdasarkan tabel yang dipilih
     $cols = $cols_map[$tabel] ?? [];
 
-    function cari($conn, $tabelSelect, $cols, $keyword, $limit, $offset, $sortBy, $sortOrder){
-            // Bangun kondisi pencarian untuk setiap kolom
-        $conditions = array_map(function($col) {
-            return "$col LIKE ?";
-        }, $cols);
-
-        // Query untuk mencari data berdasarkan keyword dan mengurutkan hasilnya
-        $sql = "SELECT * FROM {$tabelSelect} WHERE ". implode(' OR ', $conditions);
+    function cari($conn, $tabelSelect, $cols, $keyword, $limit, $offset, $sortBy, $sortOrder, $nama_kelas, $nama_user, $role) {
+        // Build search conditions for each column
+        $conditions = array_map(fn($col) => "$col LIKE ?", $cols);
+        $filter = '';
+        $params = [];
+                        
+        // Tambahkan filter khusus untuk role non-admin
+        if ($role !== 'admin') {
+            if ($tabelSelect === 'vSiswa') {
+                $filter = "nama_kelas_s = ?";
+                $params[] = $nama_kelas;
+            } elseif ($tabelSelect === 'vJadwal') {
+                $filter = "nama_kelas_j = ?";
+                $params[] = $nama_kelas;
+            } elseif ($tabelSelect === 'vAbsen') {
+                $filter = "nama_siswa_a = ?";
+                $params[] = $nama_user;
+            } elseif ($tabelSelect === 'vGuru') {
+                $filter = "nama_kelas_g = ?";
+                $params[] = $nama_kelas;
+            }
+        }    
+            // Query to search data based on keyword and sorting
+            $sql = "SELECT * FROM {$tabelSelect} WHERE (" . implode(' OR ', $conditions) . ")";
+            if ($filter) {
+                $sql .= " AND " . $filter;
+            }
+     
         $sql .= " ORDER BY {$sortBy} {$sortOrder} LIMIT ? OFFSET ?";
-
-        // Persiapkan statement
+            
+        // Prepare statement
         $stmt = $conn->prepare($sql);
+        
+        // Prepare parameters for binding
         $likeKeyword = "%{$keyword}%";
-        $params = array_fill(0, count($cols), $likeKeyword);
-
+        $likeParams = array_fill(0, count($cols), $likeKeyword);
+        
+        $params = array_merge($likeParams, $params);
+        // Add parameters for pagination
         $params[] = $limit;
         $params[] = $offset;
-        // Bind parameter untuk pencarian, pagination, dan sorting
-        $stmt->bind_param(str_repeat("s", count($cols)) . "ii", ...$params);
+       
+    // Tambahkan bind types (s untuk LIKE, i untuk limit/offset)
+        $bindTypes = str_repeat("s", count($likeParams)) . str_repeat("s", count($params) - count($likeParams) - 2) . "ii";        $stmt->bind_param($bindTypes, ...$params);        
+        $stmt->bind_param($bindTypes, ...$params);
+        // Execute statement
         $stmt->execute();
-        
         return $stmt->get_result();
     }
+        
 
     // Eksekusi pencarian dengan sorting
-    $result = cari($conn, $tabelSelect, $cols, $search, $limit, $offset, $sortBy, $sortOrder);
-
+    $result = cari($conn, $tabelSelect, $cols, $search, $limit, $offset, $sortBy, $sortOrder, $nama_kelas, $nama_user, $role);
     // Ambil data hasil query
     $data = [];
     $no = 1;
@@ -66,36 +97,82 @@
         $data[] = $row;
     }
 
-    // Query untuk menghitung total data
-    $totalSql = "SELECT COUNT(*) AS total FROM {$tabelSelect}";
-    if(!empty($search)){
-        $totalSql .= " WHERE ". implode(' OR ', array_map(function($col){
-            return "$col LIKE ?";
-        }, $cols));
-    }
+// Query untuk menghitung total data
+$totalSql = "SELECT COUNT(*) AS total FROM {$tabelSelect}";
+$totalConditions = [];
+$params = [];  // Array untuk parameter yang akan di-bind
 
-    // Persiapkan statement untuk total count
-    $totalStmt = $conn->prepare($totalSql);
-    if(!empty($search)){
-        // Bind parameter untuk pencarian
-        $totalStmt->bind_param(str_repeat("s", count($cols)), ...array_fill(0, count($cols), "%$search%"));
+// Menambahkan kondisi pencarian jika ada
+if (!empty($search)) {
+    // Buat kondisi LIKE untuk kolom yang relevan
+    $totalConditions = array_map(fn($col) => "$col LIKE ?", $cols);
+    // Tambahkan parameter pencarian ke array params
+    foreach ($cols as $col) {
+        $params[] = "%$search%";  // Menambahkan pencarian untuk setiap kolom
     }
-    $totalStmt->execute();
-    $totalResult = $totalStmt->get_result();
-    $totalRecords = $totalResult->fetch_assoc()['total'];
-    $totalPages = ceil($totalRecords / $limit);
+}
 
-    // Format hasil dalam JSON
-    echo json_encode([
-        $tabel => $data,
-        'pagination' => [
-            'totalPages' => $totalPages,
-            'currentPage' => $page,
-            'limit' => $limit,
-            'totalRecords' => $totalRecords,
-            'searchKeyword' => $search,
-            'sortBy' => $sortBy,
-           'sortOrder' => $sortOrder,
-        ]
-        ]);
+// Menambahkan filter berdasarkan role dan tabel
+if ($role !== 'admin') {  // Hanya user yang dikenakan filter
+    if ($tabelSelect == 'vSiswa') {
+        $filter = "nama_kelas_s = ?";  // Filter berdasarkan kelas
+        $params[] = $nama_kelas;  // Tambahkan kelas ke parameter
+    } elseif ($tabelSelect == 'vJadwal') {
+        $filter = "nama_kelas_j = ?";  // Filter berdasarkan kelas
+        $params[] = $nama_kelas;  // Tambahkan kelas ke parameter
+    } elseif ($tabelSelect == 'vAbsen') {
+        $filter = "nama_siswa_a = ?";  // Filter berdasarkan siswa
+        $params[] = $nama_user;  // Tambahkan nama_user ke parameter
+    } elseif ($tabelSelect == 'vGuru') {
+        $filter = "nama_kelas_g = ?";  // Filter berdasarkan guru
+        $params[] = $nama_kelas;  
+    }
+}
+
+// Gabungkan kondisi pencarian dan filter dalam query
+if ($totalConditions) {
+    $totalSql .= " WHERE " . implode(' OR ', $totalConditions);  // Kondisi pencarian
+}
+
+// Tambahkan filter ke query jika ada
+if ($filter) {
+    if ($totalConditions) {
+        $totalSql .= " AND " . $filter;  // Menambahkan filter ke query yang sudah ada
+    } else {
+        $totalSql .= " WHERE " . $filter;  // Jika tidak ada kondisi pencarian sebelumnya
+    }
+}
+
+// Persiapkan statement untuk total count
+$totalStmt = $conn->prepare($totalSql);
+
+// Tentukan tipe data untuk parameter bind (asumsikan semuanya string)
+$paramTypes = str_repeat("s", count($params));  // Semua string
+
+// Gabungkan tipe parameter dengan kondisi pencarian dan filter
+$totalStmt->bind_param($paramTypes, ...$params);
+
+// Eksekusi query
+$totalStmt->execute();
+$totalResult = $totalStmt->get_result();
+$totalRecords = $totalResult->fetch_assoc()['total'];
+$totalPages = ceil($totalRecords / $limit);
+
+// Format hasil dalam JSON
+echo json_encode([
+    $tabel => $data,
+    'pagination' => [
+        'totalPages' => $totalPages,
+        'currentPage' => $page,
+        'limit' => $limit,
+        'totalRecords' => $totalRecords,
+        'searchKeyword' => $search,
+        'sortBy' => $sortBy,
+        'sortOrder' => $sortOrder,
+        'role' => $role
+    ]
+]);
+
+
+
 ?>

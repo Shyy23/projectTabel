@@ -36,6 +36,11 @@ let fetchedPageData = [];
 const searchKeyword = document.getElementById('search').value;
 const limitPerPage = 15;
 
+// Mendapatkan role dari sessionStorage atau localStorage
+function getRole() {
+    return sessionStorage.getItem('role') || 'user';  // Default ke 'user' jika tidak ditemukan
+}
+const currentRole = getRole();
 // SEARCH
 // Fungsi untuk menangani pencarian
 document.getElementById('header-search').addEventListener('submit', function(event) {
@@ -126,10 +131,11 @@ function updateSortIcon(currentColumnHeader) {
 
 
 // Fetch Data
-function fetchData(page = 1, limit = limitPerPage, sortOrder = 'ASC', search = searchKeyword, sortColumn = currentSortColumn){
+function fetchData(page = 1, limit = limitPerPage, sortOrder = 'ASC', search = searchKeyword, sortColumn = currentSortColumn, role = currentRole){
     const tableType = getTableType();
-    const url = `/projectSyahrul/query/utility/query_utility.php?tabel=${tableType}&page=${page}&limit=${limit}&sort_by=${sortColumn}&sort_order=${sortOrder}`;
 
+    const url = `/projectSyahrul/query/utility/query_utility.php?tabel=${tableType}&page=${page}&limit=${limit}&sort_by=${sortColumn}&sort_order=${sortOrder}&role=${role}`;
+    
     const requestData = {
         method: 'POST',
         body: new URLSearchParams({
@@ -163,7 +169,7 @@ function fetchData(page = 1, limit = limitPerPage, sortOrder = 'ASC', search = s
             console.log('Fetched Data:', data); 
 
             tableBody.innerHTML = '';
-            renderTable(tableType, data[tableType]);
+            renderTable(tableType, data[tableType], role);
             renderPagination(data.pagination, limit,search);
         })
         .catch(error => console.error('Error fetching data:', error));
@@ -172,13 +178,24 @@ function fetchData(page = 1, limit = limitPerPage, sortOrder = 'ASC', search = s
 
 
 // Render Table
-function renderTable(tableType, data){
+function renderTable(tableType, data, role){
     const tableBody = document.getElementById(`table-body-${tableType}`);
     tableBody.innerHTML = '';
 
     data.forEach(item => {
         const row = document.createElement('tr');
         row.classList.add('table__row');
+
+        let editDeleteButtons = '';
+        
+        // Cek apakah user adalah admin atau user
+        if (role === 'admin') {
+            editDeleteButtons = `
+                <td><a class='edit__btn btn' href='../view/viewEdit.php?tabel=${tableType}&${tableType}_id=${item['id_' + tableType]}'>EDIT</a></td>
+                <td><a class='delete__btn btn' href='../query/query_delete.php?tabel=${tableType}&id=${item['id_' + tableType]}'>DELETE</a></td>
+            `;
+        }
+
         if(tableType === 'siswa'){
             row.innerHTML = `
             <td>${item.no}</td>
@@ -186,8 +203,7 @@ function renderTable(tableType, data){
             <td>${item.jenis_kelamin}</td>
             <td>${item.nama_kelas_s}</td>
             <td>${item.alamat}</td>
-            <td><a class='edit__btn btn' href='../view/viewEdit.php?tabel=siswa&siswa_id=${item.id_siswa}'>EDIT</a></td>
-            <td><a class='delete__btn btn' href='../query/query_delete.php?tabel=siswa&id=${item.id_siswa}'>DELETE</a></td>
+            ${editDeleteButtons}
             `;
         } else if(tableType === 'guru'){
             row.innerHTML = `
@@ -196,8 +212,7 @@ function renderTable(tableType, data){
             <td>${item.jenis_kelamin}</td>
             <td>${item.nama_mapel_g}</td>
             <td>${item.alamat_guru_g}</td>
-            <td><a class='edit__btn btn' href='../view/viewEdit.php?tabel=guru&guru_id=${item.id_guru}'>EDIT</a></td>
-            <td><a class='delete__btn btn' href='../query/query_delete.php?tabel=guru&id=${item.id_guru}'>DELETE</a></td>
+            ${editDeleteButtons}
             `;
         } else if(tableType === 'jadwal'){
             row.innerHTML = `
@@ -208,8 +223,7 @@ function renderTable(tableType, data){
             <td>${item.nama_mapel_j}</td>
             <td>${item.jam_mulai}</td>
             <td>${item.jam_selesai}</td>
-            <td><a class='edit__btn btn' href='../view/viewEdit.php?tabel=jadwal&jadwal_id=${item.id_jadwal}'>EDIT</a></td>
-            <td><a class='delete__btn btn' href='../query/query_delete.php?tabel=jadwal&id=${item.id_jadwal}'>DELETE</a></td>
+            ${editDeleteButtons}
             `;
         } else if(tableType === 'absen'){
             row.innerHTML = `
@@ -219,8 +233,7 @@ function renderTable(tableType, data){
             <td>${item.waktu}</td>
             <td>${item.tanggal}</td>
             <td>${item.keterangan_a}</td>
-            <td><a class='edit__btn btn' href='../view/viewEdit.php?tabel=presensi&presensi_id=${item.id_absen}'>EDIT</a></td>
-            <td><a class='delete__btn btn' href='../query/query_delete.php?tabel=presensi&id=${item.id_absen}'>DELETE</a></td>
+            ${editDeleteButtons}
             `;
         }
         tableBody.appendChild(row);

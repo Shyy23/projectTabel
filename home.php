@@ -1,3 +1,16 @@
+<?php
+session_start();
+include "koneksi/koneksi.php";
+if (isset($_SESSION['message'])) {
+    echo "
+    <div id='alert' class='alert'>
+        <span class='closebtn' onclick=\"this.parentElement.style.display='none';\">&times;</span> 
+        {$_SESSION['message']}
+    </div>";
+    unset($_SESSION['message']); // Hapus pesan setelah ditampilkan
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,7 +74,7 @@
                 </div>
 
                 <div class="sidebar__info">
-                    <h3 class="sidebar__name">Shyy</h3>
+                    <h3 class="sidebar__name"><?= $_SESSION['nama'];?></h3>
                     <span class="sidebar__email">Shyy23@gmail.com</span>
                 </div>
             </div>
@@ -465,5 +478,6 @@
 
     <!-- ================= MAIN js ===================== -->
     <script src="dist/js/dashboard.js?v=<?php echo time();?>"></script>
+    <script src="dist/js/login.js?v=<?php echo time();?>"></script>
 </body>
 </html>

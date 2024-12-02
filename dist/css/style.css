@@ -718,6 +718,30 @@ font-size: 1.25rem;
     background-color: hsl(0, 0%, 30%);
     border-radius: .3rem;
 }
+
+/* ================== ALERT ======================== */
+.alert {
+    position: fixed;
+    top: -50px; /* Mulai dari luar viewport */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--container-color); /* Warna hijau untuk sukses */
+    color: white;
+    padding: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 1000;
+    font-size: 16px;
+    transition: top 0.5s ease-in-out;
+}
+
+.alert.error {
+    background-color: #f44336; /* Warna merah untuk error */
+}
+
+.alert.show {
+    top: 20px; /* Posisi akhir saat alert muncul */
+}
 /* ================= BREAKPOINTS ======================= */
 /* For small Devices */
 @media screen and (max-width:340px) {
