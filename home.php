@@ -1,6 +1,11 @@
 <?php
 session_start();
 include "koneksi/koneksi.php";
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit();
+}
 if (isset($_SESSION['message'])) {
     echo "
     <div id='alert' class='alert'>
@@ -9,7 +14,6 @@ if (isset($_SESSION['message'])) {
     </div>";
     unset($_SESSION['message']); // Hapus pesan setelah ditampilkan
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +79,7 @@ if (isset($_SESSION['message'])) {
 
                 <div class="sidebar__info">
                     <h3 class="sidebar__name"><?= $_SESSION['nama'];?></h3>
-                    <span class="sidebar__email">Shyy23@gmail.com</span>
+                    <span class="sidebar__email"><?= $_SESSION['nomor_induk'];?></span>
                 </div>
             </div>
 
@@ -100,7 +104,7 @@ if (isset($_SESSION['message'])) {
                     <i class="fa-solid fa-calendar-days"></i>  
                         <span>Data Jadwal</span>
                     </a>
-                    <a href="viewTabel/TabelPresensi.php" class="sidebar__link">
+                    <a href="viewTabel/TabelAbsen.php" class="sidebar__link">
                     <i class="fa-solid fa-clipboard-user"></i>
                         <span>Data Presensi</span>
                     </a>
@@ -139,7 +143,7 @@ if (isset($_SESSION['message'])) {
                     </i>
                 </button>
 
-                <button class="sidebar__link">
+                <button class="sidebar__link" onclick="window.location.href='logout.php';">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>Log Out</span>
                 </button>

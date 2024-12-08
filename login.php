@@ -3,6 +3,12 @@ session_start();
 include "koneksi/koneksi.php";
 
 
+if (isset($_SESSION['user_id'])) {
+    // Jika sudah login, arahkan ke dashboard
+    header('Location: home.php');
+    exit();
+}
+
 
 if (isset($_SESSION['message'])) {
     echo "

@@ -71,5 +71,6 @@ date_default_timezone_set('Asia/Jakarta');
 
         <button type="submit" class="btn btn__edit">Submit</button>
     </form>
+    <a href="../viewTabel/Tabel<?=ucfirst($tabel)?>.php"><button class="btn btn__back">Kembali</button></a>
 </body>
 </html>

@@ -101,7 +101,7 @@ $selectedHariJ = fetchSelected($conn, $sql_hari, 'id_hari', 'nama_hari', $hariJ)
 
 // Absen
 
-$presensi_id = isset($_GET['presensi_id']) ? $_GET['presensi_id'] : '';
+$presensi_id = isset($_GET['absen_id']) ? $_GET['absen_id'] : '';
 $presensi_data = fetchDataEdit($conn, 'vAbsen', 'id_absen', $presensi_id, ['nama_siswa_a','tanggal','nama_mapel_a','keterangan','keterangan_a','waktu']); 
 $keterangan = $presensi_data[0]['keterangan'];
 $selectedKet = fetchSelected($conn, $sql_keterangan, 'keterangan', 'keterangan_a', $keterangan);
@@ -124,6 +124,7 @@ function getEditFields($tabel, $dataEditSources){
                 'nama' => ['value'=>$dataEditSources['guru'], 'label' => 'Nama Guru', 'type'=>'text', 'status'=>'req', 'col'=>'nama_guru_g'],
                 'jenis_kelamin' => ['value'=>$dataEditSources['guru'],'label' => 'Jenis Kelamin', 'type' => 'select', 'options' => ['L' => 'Laki-Laki', 'P' => 'Perempuan']],
                 'mapel'=>['label'=>'Mapel', 'type'=>'select', 'col'=>'mapel'],
+                'kelas'=>['label'=>'Kelas', 'type'=>'select', 'col'=>'kelas'],
                 'alamat' => ['value'=>$dataEditSources['guru'], 'label' => 'Alamat', 'type'=>'text', 'status'=>'req', 'col'=>'alamat_guru_g'],
                 
             ];
@@ -145,7 +146,7 @@ function getEditFields($tabel, $dataEditSources){
                     'jam_mulai'=>['value'=>$dataEditSources['jadwal'], 'label' => 'Jam Mulai', 'type' => 'time', 'status'=>'req'],
                     'jam_selesai'=>['value'=>$dataEditSources['jadwal'], 'label'=>'Jam Selesai', 'type'=>'time', 'status'=>'req'],
                 ];
-            case 'presensi':
+            case 'absen':
                 return [
                     'id_absen'=>['value' => $dataEditSources['presensi'], 'type'=>'hidden', 'label'=>'Id Absen'],
                     'nama'=>['value'=>$dataEditSources['presensi'], 'label'=>'Nama Siswa','type'=>'text', 'col' => 'nama_siswa_a', 'status' =>'read'],

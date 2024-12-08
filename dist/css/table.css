@@ -1,5 +1,32 @@
-/* ================= MAIN TABLE ======================= */
-:root{
+:root {
+
+    --table-container-color: hsl(var(--hue), 35%, 98%); /* Warna latar tabel */
+    --table-header-color: hsl(var(--hue), 35%, 90%); /* Warna header tabel */
+    --table-scroll-thumb: hsla(var(--hue), 0%, 0%, .2); /* Scroll thumb */
+    --table-scroll: hsla(var(--hue), 0%, 0%, .1); /* Scroll background */
+    --table-row: hsl(var(--hue), 0%, 20%); /* Warna baris default (gelap) */
+    --table-row-light: hsl(var(--hue), 0%, 10%); /* Warna baris untuk highlight */
+    --table-shadow: hsl(var(--hue), 50%, 90%); /* Warna shadow tabel */
+    --hover-shadow: rgba(0, 0, 0, .1); /* Shadow saat hover */
+    --btn-shadow: rgba(0, 0, 0, .2); /* Shadow tombol */
+    --btn-light: rgba(255, 255, 255, .8); /* Warna tombol */
+    
+    /* Warna baris ganjil dan genap di mode terang */
+    --table-row-odd: hsl(var(--hue), 30%, 80%); /* Baris ganjil lebih terang tapi cukup kontras */
+    --table-row-even: hsl(var(--hue), 30%, 75%); /* Baris genap sedikit lebih gelap */
+    --table-row-hover: hsl(var(--hue), 30%, 70%); /* Warna saat hover */
+
+    /* Warna teks untuk tabel */
+    --table-text-color: hsl(var(--hue), 30%, 10%); /* Teks lebih gelap agar terbaca jelas */
+    --table-text-header-color: hsl(var(--hue), 30%, 90%); /* Teks lebih gelap agar terbaca jelas */
+    --table-text-export-color: hsl(var(--hue), 30%, 10%); /* Teks lebih gelap agar terbaca jelas */
+    --table-text-button-color: hsl(var(--hue), 30%, 70%); /* Teks lebih gelap agar terbaca jelas */
+}
+
+
+
+
+body.dark-theme {
     --table-container-color: hsl(var(--hue), 35%, 14%);
     --table-header-color: hsl(var(--hue), 35%, 10%);
     --table-scroll-thumb: hsla(var(--hue), 0%, 0%, .4);
@@ -10,7 +37,16 @@
     --hover-shadow: rgba(0,0,0,.1);
     --btn-shadow: rgba(0,0,0,.5);
     --btn-light: rgba(255, 255, 255, .5);
+    --table-text-export-color: hsl(var(--hue), 30%, 90%);
+
+    --table-row-odd: hsl(0, 0%, 90%);
+    --table-row-even: hsl(0, 0%, 70%);
+    --table-row-hover: hsl(0, 0%, 65%);
+
+
 }
+
+
 /* =============RESPOSIVE TABLE================ */
 
 /* body{
@@ -35,7 +71,7 @@ table, th, td{
 }
 
 div.table{
-    color: var(--bw-color);
+    color: var(--table-text-color);
     width: 100%;
     height: 90vh;
     background-color: var(--table-container-color);
@@ -61,7 +97,7 @@ div.table{
     max-height: calc(89% - 1.6rem);
     background-color: var(--table-trans-1);
     margin: 0.8rem auto;
-    color: var(--text-black);
+    color: var(--table-text-color);
     border-radius: .5rem;
     overflow: auto;
     overflow: overlay;
@@ -93,23 +129,26 @@ thead th{
     left: 0;
     top: 0;
     background-color: var(--first-color);
-    color: var(--title-color);
+    color: var(--table-text-header-color);
 }
 
 tbody tr:nth-child(even){
-    background-color: var(--table-row) !important;
+    background-color: var(--table-row-even) !important;
 }
 
 
 
 tbody tr:hover{
-    background-color: var(--table-row-light);
+    background-color: var(--table-row-hover);
     box-shadow: 4px 4px 4px var(--hover-shadow) inset,
-    -3px -3px 3px var(--table-row-light) inset;
+    -3px -3px 3px var(--table-row-hover) inset;
 }
 
 tbody tr{
     transition: .4s ease-in-out;
+}
+.aksi{
+    white-space: nowrap;
 }
 /* ================== SEARCH JS ======================== */
 table{
@@ -142,12 +181,17 @@ tbody tr.hide td a{
     font: 0 / 0 sans-serif;
     transition: .2s ease-in-out .5s;
 }
+
+tbody tr:nth-child(odd){
+    background-color: var(--table-row-odd) !important; /* Gunakan variabel untuk baris ganjil */
+}
+
 tbody tr:nth-child(even){
-    background-color: hsl(0, 0%, 70%) !important;
+    background-color: var(--table-row-even) !important;
 }
 
 tbody tr:hover{
-    background-color: hsl(0, 0%, 65%);
+    background-color: var(--table-row-hover);
 } 
 
   
@@ -160,7 +204,7 @@ tbody tr:hover{
     padding-inline: 1.5rem;
 }
 .add-btn{
-    color: var(--title-color);
+    color: var(--table-text-button-color);
     transition: all .4s cubic-bezier(.4, 0, .2, 1);
     font-weight: var(--font-medium);
     position: relative;
@@ -173,8 +217,9 @@ tbody tr:hover{
     gap: 1rem;
 }
 
-.table__fungsi a{
-    background-color: var(--container-color);
+.table__fungsi a,
+.fungsi{
+    background-color: var(--table-row-even);
     padding: .5rem;
     border-radius: 50%;
     width: 2rem;
@@ -188,17 +233,19 @@ tbody tr:hover{
     transition: all .4s ease;
 }
 
-.table__fungsi a i{
+.table__fungsi a i,
+.fungsi i{
     height: .8rem;
-    color: white;
+    color: var(--table-text-color);
 }
 
 
-.table__fungsi a::before{
+.table__fungsi a::before,
+.fungsi::before{
     content: attr(data-fungsi);
     position: absolute;
     background-color: var(--first-color);
-    color: var(--title-color);
+    color: var(--table-text-header-color);
     text-decoration: none;
     padding: .2rem .5rem;
     border-radius: 100rem;
@@ -210,7 +257,8 @@ tbody tr:hover{
     transition: 200ms cubic-bezier(.42, 0, .44, 1.68);
 }
 
-.table__fungsi a::after{
+.table__fungsi a::after,
+.fungsi::after{
     content: '';
     position: absolute;
     height: 0;
@@ -222,9 +270,10 @@ tbody tr:hover{
     opacity: 0;
     transition: 200ms cubic-bezier(.42, 0, .44, 1.68);
 }
-.table__fungsi a:hover{
+.table__fungsi a:hover,
+.fungsi:hover{
     background-color: var(--first-color);
-    fill: var(--title-color);
+    fill: var(--table-text-header-color);
 }
 .add-btn i{
     font-size: 1rem;
@@ -233,11 +282,13 @@ tbody tr:hover{
     color: var(--first-color);
 }
 
-.table__fungsi a:hover::before{
+.table__fungsi a:hover::before,
+.fungsi:hover::before{
     transform: translateY(32px) rotate(0);
     opacity: 1;
 }
-.table__fungsi a:hover::after{
+.table__fungsi a:hover::after,
+.fungsi:hover::after{
     transform: translateY(22px) rotate(0);
     opacity: 1;
 }
@@ -252,7 +303,7 @@ tbody tr:hover{
   padding: .5rem 1rem;
   border-radius: 1rem;
   font-weight: var(--font-semi-bold);
-  color: var(--title-color);
+  color: var(--table-text-header-color);
   font-size: .75rem;
   box-shadow: 0 2px 24px transparent;
   transition: box-shadow .3s cubic-bezier(0.2, 0, 0.4, 1);
@@ -339,9 +390,10 @@ tbody tr:hover{
 }
 
 .page__number{
-    color: var(--title-color);
+    color: var(--table-text-color);
     place-items: center;
     padding: initial;
+    font-weight: var(--font-semi-bold);
 }
 
 .next__page.disabled,
@@ -372,6 +424,65 @@ tbody tr:hover{
 
 th.sorting .sort-icon {
     visibility: visible; /* Menampilkan ikon saat kolom disortir */
+}
+
+
+  /* ================== EXPORT ======================== */
+.export__file{
+    position: relative;
+}
+.export__file input{
+    display: none;
+}
+.export__file .export__file-btn{
+    display: inline-block;
+    transition: .2s ease-in-out;
+}
+  
+.export__file .export__file-options{
+    position: absolute;
+    right: 0;
+    width: 12rem;
+    border-radius: .5rem;
+    color: var(--table-text-export-color);
+    overflow: hidden;
+    text-align: center;
+    box-shadow: .2rem .5rem 1rem var(--table-shadow);
+    opacity: 0;
+    z-index: -1;
+    transform: scale(.8);
+    transform-origin: top right;
+    transition: .2s ease-in-out;
+}
+
+.export__file input:checked + .export__file-options{
+    opacity: 1;
+    transform: scale(1);
+    z-index: 100;
+}
+.export__file .export__file-options label{
+    display: block;
+    width: 100%;
+    padding: 0.6rem 0;
+    background-color: var(--table-header-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    transition: .2s ease-in-out;
+}
+
+.export__file .export__file-options label:first-of-type{
+    padding: 1rem 0;
+    background-color: var(--table-container-color);
+}
+
+.export__file .export__file-options label:not(:first-of-type):hover{
+    background-color: var(--table-header-color);
+    transform: scale(1.05);
+}
+.export__file .export__file-options i{
+    width: 2rem;
+    height: auto;
 }
 /* ================== BREAKPOINTS ======================== */
 @media screen and (max-width:1500px) {

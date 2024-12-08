@@ -1,7 +1,7 @@
 <?php
 include '../koneksi/koneksi.php';
 date_default_timezone_set('Asia/Jakarta');
-
+session_start();
 function fetchData($conn, $sql, $key1 = 'id', $key2 = 'nama'){
     $data = [];
     $stmt = $conn->prepare($sql);
@@ -43,6 +43,8 @@ $jadAbsen_data = fetchData($conn, $sql_jadAbsen, 'id_jadwal', 'nama_mapel');
 $sql_keterangan = "SELECT DISTINCT keterangan_a, keterangan FROM vAbsen ORDER BY keterangan";
 $keterangan_data = fetchData($conn, $sql_keterangan, 'keterangan', 'keterangan_a');
 
+$jadwal_id = isset($_GET['jadwal_id']) ? $_GET['jadwal_id'] : '' ;
+
 $tabel = isset($_GET['tabel']) ? htmlspecialchars($_GET['tabel'], ENT_QUOTES, 'UTF-8') : '';
 $formFields=[];
 
@@ -74,6 +76,7 @@ case 'guru':
         'nama_guru' => ['label' => 'Nama Guru', 'type' => 'text'],
         'jenis_kelamin' => ['label' => 'Jenis Kelamin', 'type' => 'select', 'options' => ['L' => 'Laki Laki', 'P' => 'Perempuan']],
         'mapel' => ['label' => 'Mapel', 'type' => 'select', 'options' => $dataSources['mapel']],
+        'kelas' => ['label' => 'Kelas', 'type' => 'select', 'options'=> $dataSources['kelas']],
         'alamat' => ['label' => 'Alamat', 'type' => 'text'],
         'password' => ['label' => 'Password', 'type' => 'password']
     ];
@@ -88,7 +91,12 @@ case 'jadwal':
     ];
 case 'presensi':
     return [
-        'siswa' => ['label' => 'Nama Siswa', 'type' => 'select', 'options' => $dataSources['siswa']],
+        'siswa' => [
+            'label' => 'Nama Siswa',
+            'type' => ($_SESSION['role'] == 'user') ? 'text' : 'select',  // Cek peran, jika 'user' maka type text
+            'value' => ($_SESSION['role'] == 'user') ? $_SESSION['nama'] : '', // Jika 'user', set value ke nama dari session
+            'options' => ($_SESSION['role'] == 'user') ? [] : $dataSources['siswa'], // Jika 'user', tidak perlu options
+        ],
         'jadwal' => ['label' => 'Mapel', 'type'=> 'select', 'options'=> $dataSources['jadAbsen']],
         'waktu' => ['label' => 'Waktu', 'type'=> 'time', 'auto'=>'true'],
         'tanggal' => ['label'=> 'Tanggal', 'type'=>'date', 'auto'=>'true'],

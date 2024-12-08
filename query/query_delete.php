@@ -9,10 +9,7 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
 $originalTable = $tabel;
 
-// Pemetaan tabel jika diperlukan
-if ($tabel === 'presensi') {
-    $tabel = 'absen'; // Nama tabel diubah untuk operasi database
-}
+// Pemetaan tabel jika diperluka
 // Validasi parameter
 if ($tabel && $id) {
     // Tentukan nama kolom primary key untuk masing-masing tabel

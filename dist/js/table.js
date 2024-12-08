@@ -36,11 +36,44 @@ let fetchedPageData = [];
 const searchKeyword = document.getElementById('search').value;
 const limitPerPage = 15;
 
-// Mendapatkan role dari sessionStorage atau localStorage
-function getRole() {
-    return sessionStorage.getItem('role') || 'user';  // Default ke 'user' jika tidak ditemukan
+// Variabel global untuk menyimpan nilai role
+let userRole = 'user';  // Default role
+
+// Fungsi untuk mengambil nilai role melalui AJAX
+function fetchRole() {
+    return fetch('/projectSyahrul/role.php')  // Mengakses file PHP untuk mendapatkan role
+        .then(response => response.json())  // Mengonversi respon ke JSON
+        .then(data => {
+            const userRole = data.role;  // Menyimpan nilai role dalam variabel local
+            console.log('Role from PHP:', userRole);
+
+            // Menyimpan nilai role ke dalam sessionStorage
+            sessionStorage.setItem('role', userRole);  
+        })
+        .catch(error => console.error('Error fetching role:', error));
 }
-const currentRole = getRole();
+
+userRole = sessionStorage.getItem('role');
+console.log(userRole);
+
+// Fungsi lain yang membutuhkan nilai role
+function checkUserRole() {
+    // Menggunakan nilai role dalam fungsi lain
+    if (userRole === 'admin') {
+        console.log('User is admin');
+        // Lakukan sesuatu jika role adalah admin
+    } else {
+        console.log('User is not admin');
+        // Lakukan sesuatu jika role bukan admin
+    }
+}
+
+// Mengambil role saat halaman dimuat dan kemudian memanggil fungsi lain
+fetchRole().then(() => {
+    // Setelah role diambil, kita bisa memanggil fungsi lain yang membutuhkan role
+    checkUserRole();
+});
+
 // SEARCH
 // Fungsi untuk menangani pencarian
 document.getElementById('header-search').addEventListener('submit', function(event) {
@@ -109,7 +142,7 @@ function toggleSortOrder(columnName) {
 
     // Panggil fetchData untuk mengambil data dengan urutan baru
     const searchKeyword = document.getElementById('search').value;
-    fetchData(1, limitPerPage, currentSort, searchKeyword, currentSortColumn);
+    fetchData(1, limitPerPage, currentSort, searchKeyword, currentSortColumn, userRole);
 }
 // Fungsi untuk memperbarui ikon sesuai dengan urutan sorting
 function updateSortIcon(currentColumnHeader) {
@@ -131,11 +164,10 @@ function updateSortIcon(currentColumnHeader) {
 
 
 // Fetch Data
-function fetchData(page = 1, limit = limitPerPage, sortOrder = 'ASC', search = searchKeyword, sortColumn = currentSortColumn, role = currentRole){
+function fetchData(page = 1, limit = limitPerPage, sortOrder = 'ASC', search = searchKeyword, sortColumn = currentSortColumn, role = userRole){
     const tableType = getTableType();
 
     const url = `/projectSyahrul/query/utility/query_utility.php?tabel=${tableType}&page=${page}&limit=${limit}&sort_by=${sortColumn}&sort_order=${sortOrder}&role=${role}`;
-    
     const requestData = {
         method: 'POST',
         body: new URLSearchParams({
@@ -172,13 +204,19 @@ function fetchData(page = 1, limit = limitPerPage, sortOrder = 'ASC', search = s
             renderTable(tableType, data[tableType], role);
             renderPagination(data.pagination, limit,search);
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {
+            // Memberikan pesan error yang lebih jelas
+            console.error('Error occurred during fetch operation: ', error.message);
+            console.error('URL that caused the error:', url);
+            alert('An error occurred while fetching data. Please check the console for details.');
+        });
     }, 1000);  // Menunda pengambilan data selama 100ms
 }
 
 
 // Render Table
 function renderTable(tableType, data, role){
+
     const tableBody = document.getElementById(`table-body-${tableType}`);
     tableBody.innerHTML = '';
 
@@ -186,8 +224,9 @@ function renderTable(tableType, data, role){
         const row = document.createElement('tr');
         row.classList.add('table__row');
 
+
         let editDeleteButtons = '';
-        
+        let tambahDataButton = '';
         // Cek apakah user adalah admin atau user
         if (role === 'admin') {
             editDeleteButtons = `
@@ -195,6 +234,20 @@ function renderTable(tableType, data, role){
                 <td><a class='delete__btn btn' href='../query/query_delete.php?tabel=${tableType}&id=${item['id_' + tableType]}'>DELETE</a></td>
             `;
         }
+
+        if(role === 'user'){
+                    // Cek apakah status aktif dan tambahkan tombol "Tambah Data" jika aktif
+        if ((item.aktif === 'aktif' && item.attendance_filled === 1) || (item.aktif === 'tidak aktif' && item.attendance_filled === 1)) {
+            tambahDataButton = `<td>Recorded</td>`;
+        } else if(item.aktif === 'aktif' && item.attendance_filled === 0){
+            tambahDataButton = `
+                <td class="aksi"><a class='tambah__btn btn' href='../view/viewAdd.php?tabel=presensi&${tableType}_id=${item['id_' + tableType]}'>Submit Attendance</a></td>
+            `; // Opsional: menampilkan pesan jika tidak aktif
+        }else{
+            tambahDataButton = '<td></td>';
+        }
+        }
+
 
         if(tableType === 'siswa'){
             row.innerHTML = `
@@ -239,6 +292,9 @@ function renderTable(tableType, data, role){
         tableBody.appendChild(row);
     });
 
+        
+       
+
 }
 
 // PAGINATION
@@ -256,7 +312,7 @@ if (currentPage > 1) {
     firstPageLink.setAttribute('data-fungsi', 'page-1');
     firstPageLink.addEventListener('click', (e) => {
         e.preventDefault();
-        fetchData(1, limit, currentSort, searchKeyword);
+        fetchData(1, limit, currentSort, searchKeyword, currentSortColumn, userRole);
     });
     pageNumbersContainer.appendChild(firstPageLink);
 }
@@ -270,7 +326,7 @@ if (currentPage > 2) {
     prevPageLink.setAttribute('data-fungsi', `page-${currentPage - 1}`);
     prevPageLink.addEventListener('click', (e) => {
         e.preventDefault();
-        fetchData(currentPage - 1, limit, currentSort, searchKeyword);
+        fetchData(currentPage - 1, limit, currentSort, searchKeyword, currentSortColumn, userRole);
     });
     pageNumbersContainer.appendChild(prevPageLink);
 }
@@ -292,7 +348,7 @@ if (currentPage < totalPages - 1) {
     nextPageLink.setAttribute('data-fungsi', `page-${currentPage + 1}`);
     nextPageLink.addEventListener('click', (e) => {
         e.preventDefault();
-        fetchData(currentPage + 1, limit, currentSort, searchKeyword);
+        fetchData(currentPage + 1, limit, currentSort, searchKeyword, currentSortColumn, userRole);
     });
     pageNumbersContainer.appendChild(nextPageLink);
 }
@@ -306,7 +362,7 @@ if (currentPage !== totalPages) {
     lastPageLink.setAttribute('data-fungsi', `page-${totalPages}`);
     lastPageLink.addEventListener('click', (e) => {
         e.preventDefault();
-        fetchData(totalPages, limit, currentSort, searchKeyword);
+        fetchData(totalPages, limit, currentSort, searchKeyword,currentSortColumn,userRole);
     });
     pageNumbersContainer.appendChild(lastPageLink);
 }
@@ -343,7 +399,37 @@ if (currentPage !== totalPages) {
     }
 }
 
+// Convert To Pdf
+const typeTable = getTableType();
+const pdf_btn = document.getElementById('toPDF');
+const table = document.querySelector(`#main_${typeTable}`);
+console.log(typeTable);
+console.log(table);
+const toPDF = function(table){
+    const html_code = `
+    <link rel="shortcut icon" href="../assets/icon/siswa/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link rel="stylesheet" href="../dist/css/hamburgers.
+    <link rel="stylesheet" href="../dist/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="../setup/setup.css">
+    <link rel="stylesheet" href="../dist/css/table.css">
+    <body">${table.innerHTML}</body>
+    `;
+
+    const new_window = window.open();
+    new_window.document.write(html_code);
+
+    setTimeout(()=>{
+        new_window.print();
+        new_window.close();
+    },1000);
+}
+pdf_btn.onclick = () => {
+    toPDF(table);
+}
 // fetch awal halaman
 document.addEventListener('DOMContentLoaded', () => {
-    fetchData(1, limitPerPage, currentSort, searchKeyword);
+    fetchData(1, limitPerPage, currentSort, searchKeyword, currentSortColumn,userRole);
 })
+

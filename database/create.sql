@@ -207,3 +207,10 @@ JOIN vJadwal vJ ON a.id_jadwal = vJ.id_jadwal;
 CREATE OR REPLACE VIEW vJAdAbsen AS
 SELECT j.id_jadwal, m.nama_mapel, j.aktif FROM jadwal j 
 JOIN mapel m ON j.id_mapel = m.id_mapel WHERE j.id_hari = DAYOFWEEK(CURDATE());  
+
+CREATE OR REPLACE VIEW vuser AS
+SELECT u.*, r.role_name, k.nama_kelas FROM user u 
+LEFT JOIN siswa s ON u.id_user_siswa = s.id_siswa
+LEFT JOIN guru g ON u.id_user_guru = g.id_guru
+LEFT JOIN roles r ON u.id_role = r.id_role
+LEFT JOIN vkelas k ON u.id_kelas = k.id_kelas

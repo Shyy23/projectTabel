@@ -43,7 +43,7 @@ if (isset($_SESSION['message'])) {
     <link rel="stylesheet" href="../setup/setup.css?v=<?php echo time();?>">
     <link rel="stylesheet" href="../dist/css/table.css?v=<?php echo time();?>">
 </head>
-<body>
+<body id="main_siswa">
             <!-- ================= HEADER ===================== -->
 
             <header class="header" id="header">
@@ -81,9 +81,10 @@ if (isset($_SESSION['message'])) {
                         </div>
         
                         <div class="sidebar__info">
-                            <h3 class="sidebar__name">Shyy</h3>
-                            <span class="sidebar__email">Shyy23@gmail.com</span>
+                            <h3 class="sidebar__name"><?= $_SESSION['nama'];?></h3>
+                            <span class="sidebar__email"><?= $_SESSION['nomor_induk'];?></span>
                         </div>
+
                     </div>
         
                     <div class="sidebar__content">
@@ -107,7 +108,7 @@ if (isset($_SESSION['message'])) {
                                 <i class="fa-solid fa-calendar-days"></i>  
                                 <span>Data Jadwal</span>
                             </a>
-                            <a href="TabelPresensi.php" class="sidebar__link">
+                            <a href="TabelAbsen.php" class="sidebar__link">
                                 <i class="fa-solid fa-clipboard-user"></i>
                                 <span>Data Presensi</span>
                             </a>
@@ -146,31 +147,41 @@ if (isset($_SESSION['message'])) {
                             </i>
                         </button>
         
-                        <button class="sidebar__link">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            <span>Log Out</span>
-                        </button>
+                    <button class="sidebar__link" onclick="window.location.href='../logout.php';">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Log Out</span>
+                    </button>
                     </div>
                 </div>
             </nav>
 
             <!-- ================= MAIN  ===================== -->
-             <main class="main container" id="main">
+             <main class="main container " id="main">
                 <div class="table">
-
-               
                     <section class="table__header">
                     <div class="table__info">
                         <h1 class="title__table">Tabel Daftar Siswa</h1>
                         </div>
                         <div class="table__fungsi">
                             <div class="pagination" id="pagination">
-                                <a href="#" data-fungsi="prev" class="prev__page" id="prev-page"><i class="fa-solid fa-angle-left"></i></a>
+                                <a href="#" data-fungsi="prev" class="prev__page fungsi" id="prev-page"><i class="fa-solid fa-angle-left"></i></a>
                                 <div class="page__numbers" id="page-numbers"></div>
-                                <a href="#" data-fungsi="next" class="next__page" id="next-page"><i class="fa-solid fa-angle-right"></i></a>
+                                <a href="#" data-fungsi="next" class="next__page fungsi" id="next-page"><i class="fa-solid fa-angle-right"></i></a>
                             </div>
-                            <a  data-fungsi="add" href="../view/viewAdd.php?tabel=siswa" class="add-btn"><i class="fa-solid fa-plus"></i></a>
-                            <a  data-fungsi="print" href=""><i class="fa-solid fa-file-pdf"></i></a>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                                <a  data-fungsi="add" href="../view/viewAdd.php?tabel=siswa" class="add-btn fungsi"><i class="fa-solid fa-plus"></i></a>
+                            <?php endif;?>
+                            <div class="export__file">
+                                <label data-fungsi="export" for="export-file" class="fungsi"><i class="fa-solid fa-file-pdf"></i></label>
+                                <input type="checkbox" id="export-file" name="export-file">
+                                <div class="export__file-options">
+                                    <label>Export As &nbsp; &#10140;</label>
+                                    <label for="export-file" id="toPDF" onclick="window.print()">PDF <i class="fa-solid fa-file-pdf"></i></label>
+                                    <label for="export-file">PDF <i class="fa-solid fa-file-pdf"></i></label>
+                                    <label for="export-file">PDF <i class="fa-solid fa-file-pdf"></i></label>
+                                    <label for="export-file">PDF <i class="fa-solid fa-file-pdf"></i></label>
+                                </div>
+                            </div>
                         </div>
                     </section>
                     <section class="table__body">
@@ -182,8 +193,10 @@ if (isset($_SESSION['message'])) {
                                         <th class="table__col" data-sort="jenis_kelamin">Jenis Kelamin<i class="sort-icon"></i></th>
                                         <th class="table__col" data-sort="nama_kelas_s">Kelas<i class="sort-icon"></i></th>
                                         <th class="table__col" data-sort="alamat">Alamat<i class="sort-icon"></i></th>
+                                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                                         <th class="table__col">Edit</th>
                                         <th class="table__col">Delete</th>
+                                        <?php endif; ?>
                                     </tr>
                                 </thead>
                                 <tbody class="table__body_1" id="table-body-siswa">

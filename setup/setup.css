@@ -6,33 +6,36 @@
 :root{
     --header-height: 3.5rem;
     /* ================= COLOR ======================= */
-    --hue:228;
-    --first-color: hsl(var(--hue), 85%, 63%);
-    --first-color-alt: hsl(var(--hue), 81%, 59%);
-    --white-color: hsl(0, 0%, 100%);
-    --table-trans-1: hsla( 0, 0%, 0%, .5);
-    --table-trans-2: hsla( 0, 0%, 0%, .4);
-    --blue-color: hsl(175, 85%, 80%);
-    --white-color-light: hsl(0, 0%, 20%);
-    --black-color: hsl(0, 0%, 1%);
+ /* ================= COLOR ======================= */
+    --hue: 228;
+    
+    --first-color: hsl(var(--hue), 85%, 60%);
+    --first-color-alt: hsl(var(--hue), 81%, 55%);
+    
+    --white-color: hsl(0, 0%, 95%);
+    --blue-color: hsl(175, 85%, 70%);
+    
+    --white-color-light: hsl(0, 0%, 25%);
+    --black-color: hsl(0, 0%, 5%);
     --title-color: hsl(var(--hue), 18%, 16%);
-    --bw-color: hsl(var(--hue), 0%, 1%);
-    --text-color: hsl(var(--hue), 8%, 56%);
-    --body-color: hsl(var(--hue), 70%, 99%);
-    --container-color: hsl(var(--hue), 8%, 10%);
-    --shadow-color: hsla(var(--hue), 80%, 4%, .1);
+    --bw-color: hsl(var(--hue), 0%, 10%);
+    --text-color: hsl(var(--hue), 8%, 40%);
+    --body-color: hsl(var(--hue), 70%, 93%);
+    
+    --container-color: hsl(var(--hue), 8%, 8%);
+    --shadow-color: hsla(var(--hue), 80%, 4%, .15);
+    
     --shadow-bg: linear-gradient(180deg,
-                 hsla(0, 0%, 0%, 0)60%,
-                 hsla(0, 0%, 0%, .7)78%
-                 );
+                 hsla(0, 0%, 0%, 0) 60%,
+                 hsla(0, 0%, 0%, .8) 78%);
+    
     --conic-gradient: conic-gradient(from 150deg at 50% 45%,
-                      hsl(var(--hue), 80%, 20%) 0deg,
+                      hsl(var(--hue), 80%, 28%) 0deg,
                       hsl(var(--hue), 80%, 48%) 140deg,
-                      hsl(var(--hue), 80%, 20%) 140deg)
-                      ;
-
-    --search-bar-color: hsla(0, 0%, 0%, .16);
-    --text-black : hsl(var(--hue), 0%, 90%);
+                      hsl(var(--hue), 80%, 28%) 140deg);
+    
+    --search-bar-color: hsla(0, 0%, 0%, .1);
+    --text-black: hsl(var(--hue), 0%, 80%);
 
 
 /* ================= FONT & TYPPGRAPHY ======================= */
@@ -165,7 +168,7 @@ img{
 }
 
 /* ================= VARIABLES DARK THEMES ======================= */
-body.dark-theme{
+body.dark-theme {
     --first-color: hsl(var(--hue), 70%, 63%);
     --first-color-alt: hsl(var(--hue), 66%, 59%);
     --title-color: hsl(var(--hue), 18%, 96%);
@@ -174,9 +177,19 @@ body.dark-theme{
     --container-color: hsl(var(--hue), 12%, 10%);
     --shadow-color: hsla(var(--hue), 80%, 4%, .3);
     --bw-color: hsl(var(--hue), 10%, 80%);
-    --text-black : hsl(var(--hue), 0%, 10%);
+    --text-black: hsl(var(--hue), 0%, 10%);
     --search-bar-color: hsla(0, 0%, 100%, .16);
     --white-color-light: hsl(0, 0%, 80%);
+    
+    /* Penyesuaian warna variabel yang baru ditambahkan untuk mode gelap */
+    --blue-color: hsl(175, 85%, 45%); /* Sesuaikan lightness agar lebih gelap */
+    --shadow-bg: linear-gradient(180deg,
+                 hsla(0, 0%, 0%, 0) 60%,
+                 hsla(0, 0%, 0%, .8) 78%);
+    --conic-gradient: conic-gradient(from 150deg at 50% 45%,
+                      hsl(var(--hue), 80%, 28%) 0deg,
+                      hsl(var(--hue), 80%, 48%) 140deg,
+                      hsl(var(--hue), 80%, 28%) 140deg);
     --table-trans-1: hsla( 0, 0%, 100%, .6);
     --table-trans-2: hsla( 0, 0%, 100%, .2);
 }

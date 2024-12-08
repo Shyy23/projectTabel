@@ -16,3 +16,4 @@ SELECT * FROM siswa WHERE nama LIKE 'syahrul';
 
 -- Mengambil data dengan LIMIT
 SELECT * FROM siswa LIMIT 5;
+
