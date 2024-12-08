@@ -231,6 +231,7 @@ tbody tr:hover{
     box-shadow: 1px 1px 1px var(--btn-shadow) inset,
     -1px -1px 1px var(--body-color) inset;
     transition: all .4s ease;
+    cursor: pointer;
 }
 
 .table__fungsi a i,
@@ -430,6 +431,7 @@ th.sorting .sort-icon {
   /* ================== EXPORT ======================== */
 .export__file{
     position: relative;
+
 }
 .export__file input{
     display: none;
@@ -453,12 +455,18 @@ th.sorting .sort-icon {
     transform: scale(.8);
     transform-origin: top right;
     transition: .2s ease-in-out;
+   
 }
 
 .export__file input:checked + .export__file-options{
     opacity: 1;
     transform: scale(1);
     z-index: 100;
+    
+}
+
+.export__file .export__file-options label:not(:first-of-type){
+    cursor: pointer;
 }
 .export__file .export__file-options label{
     display: block;
@@ -469,6 +477,7 @@ th.sorting .sort-icon {
     justify-content: space-around;
     align-items: center;
     transition: .2s ease-in-out;
+
 }
 
 .export__file .export__file-options label:first-of-type{
